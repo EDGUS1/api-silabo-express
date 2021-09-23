@@ -52,4 +52,19 @@ controller.delete = (req, res) => {
   });
 };
 
+controller.update = (req, res) => {
+  const { usuario_id, usuario_password } = req.body;
+  console.log({ usuario_id, usuario_password });
+  req.getConnection((err, conn) => {
+    conn.query(
+      'update usuario set usuario_password = ? where usuario_id = ? ',
+      [usuario_password, usuario_id],
+      (err, response) => {
+        if (err) res.json(err);
+        res.json(response);
+      }
+    );
+  });
+};
+
 module.exports = controller;

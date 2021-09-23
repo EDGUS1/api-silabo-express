@@ -27,7 +27,7 @@ app.set('port', process.env.PORT || 3000);
 app.use(express.urlencoded({ extended: false }));
 
 //routes
-app.use('/', loginRoute);
+app.use('/api/v1/', loginRoute);
 
 app.listen(app.get('port'), () => {
   console.log('Server on http://localhost:3000');
