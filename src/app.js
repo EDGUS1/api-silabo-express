@@ -1,10 +1,12 @@
 const express = require('express');
 const myConnection = require('express-myconnection');
 const mysql = require('mysql');
+const cors = require('cors');
 const loginRoute = require('./routes/login.routes');
-//require('dotenv').config();
+require('dotenv').config();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 //settings
