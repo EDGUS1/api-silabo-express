@@ -1,3 +1,5 @@
+const generatePdf = require('./../utils/contentPdf');
+
 const controller = {};
 
 controller.all = async (req, res) => {
@@ -31,6 +33,13 @@ controller.allbyid = async (req, res) => {
     );
     res.send('ok');
   });
+}; */
+
+controller.pdf = (req, res) => {
+  const { silabo } = req.body;
+  generatePdf(silabo, response => {
+    res.setHeader('Content-Type', 'application/pdf');
+    res.send(response);
+  });
 };
- */
 module.exports = controller;

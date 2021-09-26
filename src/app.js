@@ -12,7 +12,7 @@ app.set('port', process.env.PORT || 3000);
 
 //middlewares
 app.use(express.urlencoded({ extended: false }));
-
+app.use('/', express.static(path.join(__dirname, 'public')));
 //routes
 app.use('/api/v1/auth', loginRoute);
 app.use('/api/v1/silabo', silaboRoute);
