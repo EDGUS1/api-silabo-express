@@ -3,9 +3,9 @@ const controller = require('../controllers/login');
 const router = express.Router();
 
 router.get('/listar', controller.listar);
-router.post('/login', controller.login);
+router.post('/', controller.login);
 router.post('/register', controller.register);
-router.delete('/delete/:id', controller.delete);
-router.put('/update', controller.update);
+router.delete('/', controller.delete);
+router.put('/', controller.update);
 
 module.exports = router;
