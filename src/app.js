@@ -1,6 +1,7 @@
 const express = require('express');
 const myConnection = require('express-myconnection');
 const mysql = require('mysql');
+const path = require('path');
 const cors = require('cors');
 const loginRoute = require('./routes/login.routes');
 const silaboRoute = require('./routes/silabo.routes');
@@ -28,7 +29,7 @@ app.set('port', process.env.PORT || 3000);
 
 //middlewares
 app.use(express.urlencoded({ extended: false }));
-
+app.use('/', express.static(path.join(__dirname, 'public')));
 //routes
 app.use('/api/v1/auth', loginRoute);
 app.use('/api/v1/silabo', silaboRoute);
