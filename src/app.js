@@ -3,6 +3,7 @@ const myConnection = require('express-myconnection');
 const mysql = require('mysql');
 const cors = require('cors');
 const loginRoute = require('./routes/login.routes');
+const silaboRoute = require('./routes/silabo.routes');
 require('dotenv').config();
 
 const app = express();
@@ -30,6 +31,7 @@ app.use(express.urlencoded({ extended: false }));
 
 //routes
 app.use('/api/v1/auth', loginRoute);
+app.use('/api/v1/silabo', silaboRoute);
 
 app.listen(app.get('port'), () => {
   console.log('Server on http://localhost:3000');
