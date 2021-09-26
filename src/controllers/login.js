@@ -1,70 +1,49 @@
+const pool = require('../database');
 const controller = {};
 
-controller.login = (req, res) => {
+controller.login = async (req, res) => {
   const { email, password } = req.body;
-  console.log({ email, password });
-  req.getConnection((err, conn) => {
-    conn.query(
-      'select * from usuario where usuario_email = ? and usuario_password = ?',
-      [email, password],
-      (err, response) => {
-        if (err) res.json(err);
-        res.json(response);
-      }
-    );
-  });
+  const respuesta = await pool.query(
+    'select * from usuario where usuario_email = ? and usuario_password = ?',
+    [email, password]
+  );
+  res.json(respuesta);
 };
 
-controller.register = (req, res) => {
-  req.getConnection((err, conn) => {
-    conn.query(
-      'insert into usuario (usuario_email,usuario_password)  values (?, ?)',
-      ['nuevo@gmail.com', '123456'],
-      (err, response) => {
-        if (err) res.json(err);
-        res.json(response);
-      }
-    );
-  });
+controller.register = async (req, res) => {
+  const respuesta = await pool.query(
+    'insert into usuario (usuario_email,usuario_password) values (?, ?)',
+    ['nuevo@gmail.com', '123456']
+  );
+  res.json(respuesta);
 };
 
-controller.listar = (req, res) => {
-  req.getConnection((err, conn) => {
-    conn.query('select * from usuario', (err, response) => {
-      if (err) res.json(err);
-      res.json(response);
-    });
-  });
+controller.listar = async (req, res) => {
+  try {
+    const usuarios = await pool.query('select * from usuario');
+    res.json(usuarios);
+  } catch (e) {
+    res.json({ error: e }).status(501);
+  }
 };
 
-controller.delete = (req, res) => {
+controller.delete = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
-  req.getConnection((err, conn) => {
-    conn.query(
-      'delete from usuario where usuario_id = ? ',
-      [id],
-      (err, response) => {
-        if (err) res.json(err);
-        res.json(response);
-      }
-    );
-  });
+  const respuesta = await pool.query(
+    'delete from usuario where usuario_id = ? ',
+    [id]
+  );
+  res.json(respuesta);
 };
 
-controller.update = (req, res) => {
+controller.update = async (req, res) => {
   const { usuario_id, usuario_password } = req.body;
-  console.log({ usuario_id, usuario_password });
-  req.getConnection((err, conn) => {
-    conn.query(
-      'update usuario set usuario_password = ? where usuario_id = ? ',
-      [usuario_password, usuario_id],
-      (err, response) => {
-        if (err) res.json(err);
-        res.json(response);
-      }
-    );
-  });
+  const respuesta = await pool.query(
+    'update usuario set usuario_password = ? where usuario_id = ? ',
+    [usuario_password, usuario_id]
+  );
+
+  res.json(respuesta);
 };
 
 module.exports = controller;

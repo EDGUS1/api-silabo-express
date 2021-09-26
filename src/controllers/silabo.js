@@ -1,33 +1,23 @@
 const controller = {};
 
-controller.all = (req, res) => {
-  req.getConnection((err, conn) => {
-    conn.query(
-      'select asg.asig_id, asg_id.nombre, asg.asig_ciclo, asp.periodo_academico, asg.asig_sumilla, asu.updated_at from asignatura_usuario asu left join asignatura asg on asu.asignatura_id = asg.asig_id left join asignatura_periodo asp on asg.asig_id = asp.asig_id',
-      (err, response) => {
-        if (err) res.json(err);
-        res.json(response);
-      }
-    );
-  });
+controller.all = async (req, res) => {
+  const respuesta = await pool.query(
+    'select asg.asig_id, asg_id.nombre, asg.asig_ciclo, asp.periodo_academico, asg.asig_sumilla, asu.updated_at from asignatura_usuario asu left join asignatura asg on asu.asignatura_id = asg.asig_id left join asignatura_periodo asp on asg.asig_id = asp.asig_id',
+    [email, password]
+  );
+  res.json(respuesta);
 };
 
-controller.allbyid = (req, res) => {
+controller.allbyid = async (req, res) => {
   const { id } = req.params;
-
-  req.getConnection((err, conn) => {
-    conn.query(
-      'select asg.asig_id, asg_id.nombre, asg.asig_ciclo, asp.periodo_academico, asg.asig_sumilla, asu.updated_at from asignatura_usuario asu left join asignatura asg on asu.asignatura_id asg.asig_id left join asignatura_periodo asp on asg.asig_id = asp.asig_id where asu.usuario_id = ?',
-      [id],
-      (err, response) => {
-        if (err) res.json(err);
-        res.json(response);
-      }
-    );
-  });
+  const respuesta = await pool.query(
+    'select asg.asig_id, asg_id.nombre, asg.asig_ciclo, asp.periodo_academico, asg.asig_sumilla, asu.updated_at from asignatura_usuario asu left join asignatura asg on asu.asignatura_id asg.asig_id left join asignatura_periodo asp on asg.asig_id = asp.asig_id where asu.usuario_id = ?',
+    [id]
+  );
+  res.json(respuesta);
 };
 
-controller.save = (req, res) => {
+/* controller.save = (req, res) => {
   console.log(req.body);
   const codigo, ciclo, sumilla, creditos;
   req.getConnection((err, conn) => {
@@ -42,5 +32,5 @@ controller.save = (req, res) => {
     res.send('ok');
   });
 };
-
+ */
 module.exports = controller;
