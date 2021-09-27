@@ -11,9 +11,10 @@ controller.login = async (req, res) => {
 };
 
 controller.register = async (req, res) => {
+  const { email, password } = req.body;
   const respuesta = await pool.query(
     'insert into usuario (usuario_email,usuario_password) values (?, ?)',
-    ['nuevo@gmail.com', '123456']
+    [email, password]
   );
   res.json(respuesta);
 };
