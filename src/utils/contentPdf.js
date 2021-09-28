@@ -55,7 +55,7 @@ function crearPdf(silabo) {
                 },
                 {
                   width: 200,
-                  text: silabo.nombre_curso,
+                  text: silabo.asig_nombre,
                 },
               ],
             },

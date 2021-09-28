@@ -13,7 +13,7 @@ const controller = {};
 controller.allbyid = async (req, res) => {
   const { id } = req.params;
   const query =
-    'select asg.asig_id, asg.asig_nombre, asg.asig_ciclo, asp.periodo_academico, asg.asig_sumilla, asu.updated_at from asignatura_usuario asu left join asignatura_periodo asp on asu.asig_periodo_id = asp.asig_periodo_id left join asignatura asg on asp.asig_id = asg.asig_id  where asu.usuario_id = ?';
+    'select asg.asig_id, asg.asig_nombre, asg.asig_ciclo, asp.periodo_academico, asg.asig_sumilla, asu.updated_at, asu.asig_periodo_id from asignatura_usuario asu left join asignatura_periodo asp on asu.asig_periodo_id = asp.asig_periodo_id left join asignatura asg on asp.asig_id = asg.asig_id  where asu.usuario_id = ?';
   const respuesta = await pool.query(query, [id]);
   res.json(respuesta);
 };
@@ -45,9 +45,15 @@ controller.save = async (req, res) => {
   res.json(respuesta2);
 };
 
-controller.pdf = (req, res) => {
-  const { silabo } = req.body;
-  generatePdf(silabo, response => {
+controller.pdf = async (req, res) => {
+  const { silabo_id } = req.body;
+
+  const query =
+    'select asignatura.asig_nombre from asignatura_periodo left join asignatura on asignatura.asig_id = asignatura_periodo.asig_id where asig_periodo_id = ?';
+
+  const respuesta = await pool.query(query, [silabo_id]);
+
+  generatePdf(respuesta[0], response => {
     res.setHeader('Content-Type', 'application/pdf');
     res.send(response);
   });
