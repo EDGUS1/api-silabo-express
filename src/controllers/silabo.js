@@ -49,7 +49,7 @@ controller.pdf = async (req, res) => {
   const { silabo_id } = req.body;
 
   const query =
-    'select asignatura.asig_nombre, asignatura.asig_codigo, asignatura_sumilla from asignatura_periodo left join asignatura on asignatura.asig_id = asignatura_periodo.asig_id where asig_periodo_id = ?';
+    'select asignatura.asig_nombre, asignatura.asig_codigo, asignatura.asig_sumilla from asignatura_periodo left join asignatura on asignatura.asig_id = asignatura_periodo.asig_id where asig_periodo_id = ?';
 
   const respuesta = await pool.query(query, [silabo_id]);
 
