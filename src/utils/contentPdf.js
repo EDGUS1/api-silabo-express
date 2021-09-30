@@ -76,7 +76,7 @@ function crearPdf(silabo) {
                 },
                 {
                   width: 200,
-                  text: '20W0501',
+                  text: silabo.asig_codigo,
                 },
               ],
             },
@@ -297,7 +297,7 @@ function crearPdf(silabo) {
         { listType: 'none', text: '2. \tSUMILLA', bold: true },
         {
           listType: 'none',
-          text: 'Esta asignatura de formación profesional especializada, cuya naturaleza es teórica – práctica, se orienta al diseño de base de datos como componente principal de los sistemas de información modernos. Tiene el propósito de promover el uso adecuado de métodos y técnicas para el modelamiento y diseño de base de datos. Los temas centrales son: Introducción a los sistemas de Base de Datos. Modelo Entidad Relación. Modelo Relacional. Introducción a SQL.',
+          text: silabo.asig_sumilla,
           fontSize: 10,
           margin: [26, 10, 40, 0],
         },
