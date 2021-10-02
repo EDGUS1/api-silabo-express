@@ -13,7 +13,7 @@ const controller = {};
 controller.allbyid = async (req, res) => {
   const { id } = req.params;
   const query =
-    'select asg.asig_id, asg.asig_nombre, asg.asig_ciclo, asp.periodo_academico, asg.asig_sumilla, asu.updated_at, asu.asig_periodo_id from asignatura_usuario asu left join asignatura_periodo asp on asu.asig_periodo_id = asp.asig_periodo_id left join asignatura asg on asp.asig_id = asg.asig_id  where asu.usuario_id = ?';
+    'select asg.asig_id, asg.asig_nombre, asg.asig_ciclo, asp.periodo_academico, asg.asig_sumilla, asu.updated_at, asu.asig_periodo_id, asu.favorito from asignatura_usuario asu left join asignatura_periodo asp on asu.asig_periodo_id = asp.asig_periodo_id left join asignatura asg on asp.asig_id = asg.asig_id  where asu.usuario_id = ?';
   const respuesta = await pool.query(query, [id]);
   res.json(respuesta);
 };
@@ -57,6 +57,25 @@ controller.pdf = async (req, res) => {
     res.setHeader('Content-Type', 'application/pdf');
     res.send(response);
   });
+};
+
+controller.delete = async (req, res) => {
+  const { id } = req.params;
+  const respuesta = await pool.query(
+    'delete from asignatura_usuario where asig_periodo_id = ? ',
+    [id]
+  );
+  res.json(respuesta);
+};
+
+controller.favorito = async (req, res) => {
+  const { id, favorito } = req.body;
+  const respuesta = await pool.query(
+    'update asignatura_usuario set favorito = ? where asig_periodo_id = ? ',
+    [favorito, id]
+  );
+
+  res.json(respuesta);
 };
 
 module.exports = controller;

@@ -6,7 +6,8 @@ const router = express.Router();
 router.get('/:id', controller.allbyid);
 router.post('/pdf', controller.pdf);
 router.post('/', controller.save);
-/* router.delete('/:id', controller.delete);
-router.put('/', controller.update); */
+router.delete('/:id', controller.delete);
+/*router.put('/', controller.update); */
+router.put('/favorito', controller.favorito);
 
 module.exports = router;
