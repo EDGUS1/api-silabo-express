@@ -1,13 +1,31 @@
 const pool = require('../database');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
 const controller = {};
 
 controller.login = async (req, res) => {
   const { email, password } = req.body;
+  /* console.log(req.ip);
+  console.log(req.ips);
+  console.log(req.originalUrl); */
   const respuesta = await pool.query(
     'select * from usuario where usuario_email = ? and usuario_password = ?',
     [email, password]
   );
-  res.json(respuesta);
+
+  if (!respuesta[0]) return res.json({ error: 'Not found' });
+
+  const userForToken = {
+    id: respuesta[0].usuario_id,
+    email: respuesta[0].usuario_email,
+  };
+
+  const token = jwt.sign(userForToken, process.env.JWT_SECRET);
+  res.send({
+    user_email: respuesta[0].usuario_email,
+    token,
+  });
 };
 
 controller.register = async (req, res) => {
