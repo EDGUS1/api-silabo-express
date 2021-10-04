@@ -6,6 +6,7 @@ const silaboRoute = require('./routes/silabo.routes');
 const cursoRoute = require('./routes/curso.routes');
 const hoursRoute = require('./routes/hours.routes');
 const planRoute = require('./routes/plan.routes');
+const competenciaRoute = require('./routes/competencia.routes');
 
 const app = express();
 app.use(cors());
@@ -24,6 +25,7 @@ app.use('/api/v1/silabo', silaboRoute);
 app.use('/api/v1/curso', cursoRoute);
 app.use('/api/v1/hours', hoursRoute);
 app.use('/api/v1/plan', planRoute);
+app.use('/api/v1/competencia', competenciaRoute);
 
 app.listen(app.get('port'), () => {
   console.log('Server on http://localhost:3000');
