@@ -7,6 +7,7 @@ const cursoRoute = require('./routes/curso.routes');
 const hoursRoute = require('./routes/hours.routes');
 const planRoute = require('./routes/plan.routes');
 const competenciaRoute = require('./routes/competencia.routes');
+const docenteRoute = require('./routes/docente.routes');
 
 const app = express();
 app.use(cors());
@@ -26,6 +27,7 @@ app.use('/api/v1/curso', cursoRoute);
 app.use('/api/v1/hours', hoursRoute);
 app.use('/api/v1/plan', planRoute);
 app.use('/api/v1/competencia', competenciaRoute);
+app.use('/api/v1/docente', docenteRoute);
 
 app.listen(app.get('port'), () => {
   console.log('Server on http://localhost:3000');
