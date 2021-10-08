@@ -12,11 +12,7 @@ const docenteRoute = require('./routes/docente.routes');
 
 const app = express();
 
-app.use(
-  cors({
-    origin: 'https://silaboangular.netlify.app',
-  })
-);
+app.use(cors());
 app.use(express.json());
 
 //settings
