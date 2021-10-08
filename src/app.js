@@ -14,7 +14,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: 'https://silaboangular.netlify.app/',
+    origin: 'https://silaboangular.netlify.app',
   })
 );
 app.use(express.json());
