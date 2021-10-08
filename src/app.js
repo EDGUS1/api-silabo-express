@@ -32,5 +32,5 @@ app.use('/api/v1/competencia', competenciaRoute);
 app.use('/api/v1/docente', docenteRoute);
 
 app.listen(app.get('port'), () => {
-  console.log('Server on http://localhost:3000');
+  console.log(`Server on http://localhost:${app.get('port')}`);
 });
