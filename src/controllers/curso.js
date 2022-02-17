@@ -23,8 +23,10 @@ controller.save = async (req, res) => {
       estrategia,
       plan,
     } = req.body;
+
     const query =
       'insert into asignatura (asig_codigo, asig_nombre, horas_sem_id, asig_ciclo, asig_sumilla, asig_creditos, asig_estrategia_didactica, tipo_asignatura_id, plan_id) values (?,?,?,?,?,?,?,?,?)';
+
     const response = await pool.query(query, [
       codigo,
       nombre,
@@ -40,6 +42,11 @@ controller.save = async (req, res) => {
   } catch (e) {
     res.status(501).json({ error: e });
   }
+};
+
+controller.delete = async (req, res) => {
+  const { id } = req.body;
+  await pool.query('delete from curso where id = ?', [id]);
 };
 
 module.exports = controller;

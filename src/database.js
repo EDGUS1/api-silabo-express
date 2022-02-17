@@ -3,7 +3,7 @@ const { promisify } = require('util');
 require('dotenv').config();
 
 const pool = mysql.createPool({
-  connectionLimit: 5,
+  connectionLimit: 4,
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,

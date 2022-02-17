@@ -4,5 +4,6 @@ const router = express.Router();
 
 router.get('/', controller.listar);
 router.post('/', controller.save);
+router.delete('/', controller.delete);
 
 module.exports = router;
