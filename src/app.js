@@ -31,6 +31,10 @@ app.use('/api/v1/plan', planRoute);
 app.use('/api/v1/competencia', competenciaRoute);
 app.use('/api/v1/docente', docenteRoute);
 
+app.use('/api/v1', (req, res) => {
+  res.json({ api: 'v1' });
+});
+
 app.listen(app.get('port'), () => {
   console.log(`Server on http://localhost:${app.get('port')}`);
 });
