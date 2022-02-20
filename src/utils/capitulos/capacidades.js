@@ -1,7 +1,7 @@
 const getCapacidades = capacidades => [
   {
     listType: 'none',
-    text: '4. \tCAPACIDADES',
+    text: '\tCAPACIDADES',
     bold: true,
     margin: [0, 10, 0, 10],
   },

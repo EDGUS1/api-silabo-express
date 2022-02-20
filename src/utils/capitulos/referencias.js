@@ -6,7 +6,7 @@ const filaReferencia = (autores, libro, editorial, ciudad, anio, paginas) => ({
 const getReferencias = () => [
   {
     listType: 'none',
-    text: '8. \tREFERENCIAS BIBLIOGRAFICAS:',
+    text: '\tREFERENCIAS BIBLIOGRAFICAS:',
     bold: true,
     margin: [0, 20, 0, 10],
   },

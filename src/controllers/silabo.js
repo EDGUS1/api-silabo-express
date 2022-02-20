@@ -49,14 +49,24 @@ controller.pdf = async (req, res) => {
   const { silabo_id } = req.body;
 
   const query =
-    'select asignatura.asig_nombre, asignatura.asig_codigo, asignatura.asig_sumilla from asignatura_periodo left join asignatura on asignatura.asig_id = asignatura_periodo.asig_id where asig_periodo_id = ?';
+    'select a.asig_codigo, a.asig_nombre, a.asig_ciclo, a.asig_sumilla, a.asig_creditos, a.asig_estrategia_didactica, ap.asig_periodo_modalidad, ap.periodo_academico, ta.tipo_asignatura_nombre, hs.teoria, hs.laboratorio from asignatura_periodo ap left join asignatura a on a.asig_id = ap.asig_id left join tipo_asignatura ta on ta.tipo_asignatura_id = a.tipo_asignatura_id left join horas_semanales hs on hs.horas_sem_id = a.horas_sem_id where ap.asig_periodo_id = ?';
+
+  /* const query_docentes =
+    'select * from docente d left join docente_asignatura da on da.docente_id = d.docente_id left join asignatura_periodo ap on ap.asig_periodo_id = da.asig_periodo_id where ap.asig_periodo_id = ?'; */
+
+  const query_docentes = 'select * from docente';
 
   const respuesta = await pool.query(query, [silabo_id]);
+  const respuesta_docente = await pool.query(query_docentes);
+  // const respuesta_docente = await pool.query(query_docentes, [silabo_id]);
 
-  generatePdf(respuesta[0], response => {
-    res.setHeader('Content-Type', 'application/pdf');
-    res.send(response);
-  });
+  generatePdf(
+    { silabo: respuesta[0], docentes: respuesta_docente },
+    response => {
+      res.setHeader('Content-Type', 'application/pdf');
+      res.send(response);
+    }
+  );
 };
 
 controller.delete = async (req, res) => {

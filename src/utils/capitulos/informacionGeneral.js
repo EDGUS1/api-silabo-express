@@ -45,7 +45,7 @@ const getInformacionGeneral = ({
 }) => {
   const cadena = `Teoría ${teoria} h, Laboratorio ${laboratorio} h`;
   const contenido = `[
-      { "listType": "none", "text": "1. \\tINFORMACIÓN GENERAL", "bold": true },
+      { "listType": "none", "text": "\\tINFORMACIÓN GENERAL", "bold": true },
       {
         "ol": [
           ${filaInformacion(

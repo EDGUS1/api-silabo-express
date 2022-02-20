@@ -1,7 +1,7 @@
 const getEstrategiaDidactica = estrategia => [
   {
     listType: 'none',
-    text: '6. \tESTRATEGIA DIDACTICA',
+    text: '\tESTRATEGIA DIDACTICA',
     bold: true,
     margin: [0, 20, 0, 10],
   },

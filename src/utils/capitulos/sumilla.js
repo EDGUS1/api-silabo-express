@@ -1,7 +1,7 @@
 const getSumilla = sumilla => [
   {
     listType: 'none',
-    text: '2. \tSUMILLA',
+    text: '\tSUMILLA',
     bold: true,
     margin: [0, 10, 20, 0],
   },

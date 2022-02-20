@@ -1,7 +1,7 @@
 const getEvaluacionAprendizaje = () => [
   {
     listType: 'none',
-    text: '7. \tEVALUACION DEL APRENDIZAJE',
+    text: '\tEVALUACION DEL APRENDIZAJE',
     bold: true,
     margin: [0, 20, 0, 10],
   },

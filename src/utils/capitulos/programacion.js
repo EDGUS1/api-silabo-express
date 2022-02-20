@@ -111,7 +111,7 @@ const getProgramacion = () => {
   const cont = `[
     {
       "listType": "none",
-      "text": "5. \\tPROGRAMACIÓN",
+      "text": "\\tPROGRAMACIÓN",
       "bold": true,
       "margin": [0, 10, 0, 10]
     },

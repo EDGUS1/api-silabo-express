@@ -13,7 +13,7 @@ const getEstrategiaDidactica = require('./capitulos/estrategias');
 const getEvaluacionAprendizaje = require('./capitulos/evaluacion');
 const getReferencias = require('./capitulos/referencias');
 
-function crearPdf(silabo) {
+function crearPdf({ silabo, nombres, correos }) {
   return [
     {
       image: path.join(__dirname, '../public/unmsm.png'),
@@ -45,21 +45,19 @@ function crearPdf(silabo) {
     {
       ol: [
         getInformacionGeneral({
-          nombre_curso: 'silabo.nombre',
-          codigo_curso: '20W0501',
-          tipo: 'Obligatorio',
-          teoria: 2,
-          laboratorio: 3,
-          semestre: '2021-2',
-          ciclo: 'V',
-          creditos: 4,
-          modalidad: 'Virtual',
-          profesores: ['profe 1', 'profe 2'],
-          correos: ['profe 1', 'profe 2'],
+          nombre_curso: silabo.asig_nombre,
+          codigo_curso: silabo.asig_codigo,
+          tipo: silabo.tipo_asignatura_nombre,
+          teoria: silabo.teoria,
+          laboratorio: silabo.laboratorio,
+          semestre: silabo.periodo_academico,
+          ciclo: silabo.asig_ciclo,
+          creditos: silabo.asig_creditos,
+          modalidad: silabo.asig_periodo_modalidad,
+          profesores: nombres,
+          correos: correos,
         }),
-        getSumilla(
-          'Esta asignatura de formación profesional especializada, cuya naturaleza es teórica – práctica, se orienta al diseño de base de datos como componente principal de los sistemas de información modernos. Tiene el propósito de promover el uso adecuado de métodos y técnicas para el modelamiento y diseño de base de datos. Los temas centrales son: Introducción a los sistemas de Base de Datos. Modelo Entidad Relación. Modelo Relacional. Introducción a SQL.'
-        ),
+        getSumilla(silabo.asig_sumilla),
         getCompetencias(
           [
             'CG1. Gestiona la información y la difusión de conocimientos con adecuada comunicación oral y escrita de la propia profesión, ejerciendo el derecho de libertad de pensamiento con responsabilidad.',
@@ -93,9 +91,7 @@ function crearPdf(silabo) {
           'CEC012: Define procedimientos almacenados y triggers,',
         ]),
         getProgramacion(),
-        getEstrategiaDidactica(
-          'Se desarrollará la asignatura siguiendo los criterios deductivos, inductivos, con la participación activa de los estudiantes. En este sentido, se utilizarán técnicas de exposición participativa, trabajo grupal y desarrollo de laboratorios. Así mismo se utilizará el Aula virtual como soporte para compartir información teórica, practica y de apoyo, se fomentará la investigación y recopilación de información por parte de los estudiantes mediante encargo de trabajos de investigación y tareas. El desarrollo de los casos prácticos y ejercicios permitirán que el alumno construya modelos y vea de modo práctico la utilidad de las metodologías aprendidas para finalmente aplicarlas en un proyecto final grupal'
-        ),
+        getEstrategiaDidactica(silabo.asig_estrategia_didactica),
         getEvaluacionAprendizaje(),
         getReferencias(),
       ],
@@ -104,10 +100,20 @@ function crearPdf(silabo) {
   ];
 }
 
-function generatePdf(silabo, callback) {
+function generatePdf({ silabo, docentes }, callback) {
+  const nombres = docentes.map(
+    d =>
+      d.docente_nombre +
+      ' ' +
+      d.docente_apellido_paterno +
+      ' ' +
+      d.docente_apellido_materno
+  );
+
+  const correos = docentes.map(d => d.docente_correo);
   try {
     let docDefinition = {
-      content: crearPdf(silabo),
+      content: crearPdf({ silabo, nombres, correos }),
       styles: styles,
       pageMargins: [40, 60, 10, 100],
     };

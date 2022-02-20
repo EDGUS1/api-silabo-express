@@ -1,7 +1,7 @@
 const getCompetencias = (competencias_generales, competencias_especificas) => [
   {
     listType: 'none',
-    text: '3. \tCOMPETENCIAS',
+    text: '\tCOMPETENCIAS',
     bold: true,
     margin: [0, 10, 0, 10],
   },
