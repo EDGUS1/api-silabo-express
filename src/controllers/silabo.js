@@ -13,13 +13,34 @@ const controller = {};
 controller.allbyid = async (req, res) => {
   const { id } = req.params;
   const query =
-    'select asg.asig_id, asg.asig_nombre, asg.asig_ciclo, asp.periodo_academico, asg.asig_sumilla, asu.updated_at, asu.asig_periodo_id, asu.favorito from asignatura_usuario asu left join asignatura_periodo asp on asu.asig_periodo_id = asp.asig_periodo_id left join asignatura asg on asp.asig_id = asg.asig_id  where asu.usuario_id = ?';
+    'SELECT asg.asig_id, asg.asig_nombre, asg.asig_ciclo, asg.asig_codigo, asg.asig_creditos, asg.asig_estrategia_didactica, asg.horas_sem_id, asg.plan_id, asg.tipo_asignatura_id, asp.periodo_academico, asp.asig_periodo_modalidad, asg.asig_sumilla, asu.updated_at, asu.asig_periodo_id, asu.favorito from asignatura_usuario asu LEFT JOIN asignatura_periodo asp ON asu.asig_periodo_id = asp.asig_periodo_id LEFT JOIN asignatura asg ON asp.asig_id = asg.asig_id WHERE asu.usuario_id = ?';
   const respuesta = await pool.query(query, [id]);
-  res.json(respuesta);
+
+  const silabos = respuesta.map(r => ({
+    updated_at: r.updated_at,
+    asig_periodo_id: r.asig_periodo_id,
+    favorito: r.favorito,
+    periodo_academico: r.periodo_academico,
+    asig_periodo_modalidad: r.asig_periodo_modalidad,
+    curso: {
+      asig_codigo: r.asig_codigo,
+      asig_creditos: r.asig_creditos,
+      asig_estrategia_didactica: r.asig_estrategia_didactica,
+      asig_ciclo: r.asig_ciclo,
+      asig_id: r.asig_id,
+      asig_nombre: r.asig_nombre,
+      asig_sumilla: r.asig_sumilla,
+      horas_sem_id: r.horas_sem_id,
+      plan_id: r.plan_id,
+      tipo_asignatura_id: r.tipo_asignatura_id,
+    },
+  }));
+
+  res.json(silabos);
 };
 
 controller.save = async (req, res) => {
-  const { user_id, asig_id, asig_periodo_modalidad, periodo_academico } =
+  const { user_id, curso, asig_periodo_modalidad, periodo_academico } =
     req.body;
   /*
   lo q se esta guardando -> codigo, nombre, tipo, horas, semestre, ciclo, creditos, modalidad, sumilla
@@ -29,7 +50,7 @@ controller.save = async (req, res) => {
     'insert into asignatura_periodo (asig_id, asig_periodo_modalidad, periodo_academico) values (?, ?, ?)';
 
   const respuesta = await pool.query(query_asignatura_periodo, [
-    asig_id,
+    curso.asig_id,
     asig_periodo_modalidad,
     periodo_academico,
   ]);
