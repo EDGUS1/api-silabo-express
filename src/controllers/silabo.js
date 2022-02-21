@@ -40,14 +40,18 @@ controller.allbyid = async (req, res) => {
 };
 
 controller.save = async (req, res) => {
-  const { user_id, curso, asig_periodo_modalidad, periodo_academico } =
-    req.body;
-  /*
-  lo q se esta guardando -> codigo, nombre, tipo, horas, semestre, ciclo, creditos, modalidad, sumilla
-  lo que se inserta -> asignatura_id, semestre,  modalidad
-  */
+  const {
+    user_id,
+    curso,
+    asig_periodo_modalidad,
+    periodo_academico,
+    docentes,
+    competencias,
+    capacidades,
+  } = req.body;
+
   const query_asignatura_periodo =
-    'insert into asignatura_periodo (asig_id, asig_periodo_modalidad, periodo_academico) values (?, ?, ?)';
+    'INSERT INTO asignatura_periodo (asig_id, asig_periodo_modalidad, periodo_academico) VALUES (?, ?, ?)';
 
   const respuesta = await pool.query(query_asignatura_periodo, [
     curso.asig_id,
@@ -56,33 +60,75 @@ controller.save = async (req, res) => {
   ]);
 
   const query_asignatura_usuario =
-    'insert into asignatura_usuario (usuario_id, asig_periodo_id) values (?,?)';
+    'INSERT INTO asignatura_usuario (usuario_id, asig_periodo_id) VALUES (?,?)';
 
   const respuesta2 = await pool.query(query_asignatura_usuario, [
     user_id,
     respuesta.insertId,
   ]);
-  res.status(201);
-  res.json(respuesta2);
+
+  // Por default el primer docente es el responsable
+  for (let i = 0; i < docentes.length; i++) {
+    const query_docente_asignatura =
+      'INSERT INTO docente_asignatura (docente_asignatura_responsable, docente_id, asig_periodo_id) VALUES (?,?,?)';
+    await pool.query(query_docente_asignatura, [
+      i === 0 ? 1 : 0,
+      docentes[i].docente_id,
+      respuesta.insertId,
+    ]);
+  }
+
+  for (let i = 0; i < competencias.length; i++) {
+    const query_competencia_asignada =
+      'INSERT INTO competencia_asignada (comp_esp_id, asig_periodo_id) VALUES (?,?)';
+    await pool.query(query_competencia_asignada, [
+      competencias[i].comp_esp_id,
+      respuesta.insertId,
+    ]);
+  }
+
+  for (let i = 0; i < capacidades.length; i++) {
+    const query_capacidad =
+      'INSERT INTO capacidad (capacidad_codigo, capacidad_nombre, asig_periodo_id) VALUES (?,?,?)';
+    await pool.query(query_capacidad, [
+      `CEC${i < 9 ? '0' + (i + 1) : i + 1}`,
+      capacidades[i].capacidad_nombre,
+      respuesta.insertId,
+    ]);
+  }
+
+  res.status(201).json(respuesta2);
 };
 
 controller.pdf = async (req, res) => {
   const { silabo_id } = req.body;
 
   const query =
-    'select a.asig_codigo, a.asig_nombre, a.asig_ciclo, a.asig_sumilla, a.asig_creditos, a.asig_estrategia_didactica, ap.asig_periodo_modalidad, ap.periodo_academico, ta.tipo_asignatura_nombre, hs.teoria, hs.laboratorio from asignatura_periodo ap left join asignatura a on a.asig_id = ap.asig_id left join tipo_asignatura ta on ta.tipo_asignatura_id = a.tipo_asignatura_id left join horas_semanales hs on hs.horas_sem_id = a.horas_sem_id where ap.asig_periodo_id = ?';
+    'SELECT a.asig_codigo, a.asig_nombre, a.asig_ciclo, a.asig_sumilla, a.asig_creditos, a.asig_estrategia_didactica, ap.asig_periodo_modalidad, ap.periodo_academico, ta.tipo_asignatura_nombre, hs.teoria, hs.laboratorio from asignatura_periodo ap LEFT JOIN asignatura a ON a.asig_id = ap.asig_id LEFT JOIN tipo_asignatura ta ON ta.tipo_asignatura_id = a.tipo_asignatura_id LEFT JOIN horas_semanales hs ON hs.horas_sem_id = a.horas_sem_id WHERE ap.asig_periodo_id = ?';
 
-  /* const query_docentes =
-    'select * from docente d left join docente_asignatura da on da.docente_id = d.docente_id left join asignatura_periodo ap on ap.asig_periodo_id = da.asig_periodo_id where ap.asig_periodo_id = ?'; */
+  const query_docentes =
+    'select * from docente d left join docente_asignatura da on da.docente_id = d.docente_id left join asignatura_periodo ap on ap.asig_periodo_id = da.asig_periodo_id where ap.asig_periodo_id = ?';
 
-  const query_docentes = 'select * from docente';
+  const query_capacidad = 'SELECT * FROM capacidad where asig_periodo_id = ?';
+  const query_general =
+    'SELECT * FROM competencia_general cg inner join plan p on p.plan_id = cg.plan_id inner join asignatura a on a.plan_id = p.plan_id inner join asignatura_periodo ap on ap.asig_id = a.asig_id where ap.asig_periodo_id = ?';
+  const query_especifico =
+    'SELECT * FROM competencia_especifica ce inner join competencia_asignada ca on ce.comp_esp_id = ca.comp_esp_id where ca.asig_periodo_id = ?';
 
   const respuesta = await pool.query(query, [silabo_id]);
-  const respuesta_docente = await pool.query(query_docentes);
-  // const respuesta_docente = await pool.query(query_docentes, [silabo_id]);
+  const respuesta_docente = await pool.query(query_docentes, [silabo_id]);
+  const respuesta_capacidad = await pool.query(query_capacidad, [silabo_id]);
+  const respuesta_general = await pool.query(query_general, [silabo_id]);
+  const respuesta_especifico = await pool.query(query_especifico, [silabo_id]);
 
   generatePdf(
-    { silabo: respuesta[0], docentes: respuesta_docente },
+    {
+      silabo: respuesta[0],
+      docentes: respuesta_docente,
+      capacidades: respuesta_capacidad,
+      cgenerales: respuesta_general,
+      cespecificos: respuesta_especifico,
+    },
     response => {
       res.setHeader('Content-Type', 'application/pdf');
       res.send(response);
