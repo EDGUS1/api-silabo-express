@@ -3,7 +3,7 @@ const filaReferencia = (autores, libro, editorial, ciudad, anio, paginas) => ({
   margin: [0, 5],
 });
 
-const getReferencias = () => [
+const getReferencias = referencias => [
   {
     listType: 'none',
     text: '\tREFERENCIAS BIBLIOGRAFICAS:',
@@ -11,40 +11,16 @@ const getReferencias = () => [
     margin: [0, 20, 0, 10],
   },
   {
-    ul: [
+    ul: referencias.map(r =>
       filaReferencia(
-        'Thomas M. Connolly, Carolyn E. Begg',
-        'Database Systems: A Practical Approach to Design, Implementation, and Management, Global Edition, 6/E',
-        'Pearson',
+        r.nombre,
+        r.libro_nombre,
+        r.editorial_nombre,
         'Madrid',
-        2014,
+        r.libro_fecha,
         1440
-      ),
-      filaReferencia(
-        'Thomas M. Connolly, Carolyn E. Begg',
-        'Database Systems: A Practical Approach to Design, Implementation, and Management, Global Edition, 6/E',
-        'Pearson',
-        'Madrid',
-        2014,
-        1440
-      ),
-      filaReferencia(
-        'Thomas M. Connolly, Carolyn E. Begg',
-        'Database Systems: A Practical Approach to Design, Implementation, and Management, Global Edition, 6/E',
-        'Pearson',
-        'Madrid',
-        2014,
-        1440
-      ),
-      filaReferencia(
-        'Thomas M. Connolly, Carolyn E. Begg',
-        'Database Systems: A Practical Approach to Design, Implementation, and Management, Global Edition, 6/E',
-        'Pearson',
-        'Madrid',
-        2014,
-        1440
-      ),
-    ],
+      )
+    ),
     fontSize: 10,
     margin: [26, 10, 40, 0],
   },

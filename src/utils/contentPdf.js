@@ -20,6 +20,7 @@ function crearPdf({
   capacidades,
   compe_general,
   compe_espec,
+  referencias,
 }) {
   return [
     {
@@ -70,7 +71,7 @@ function crearPdf({
         getProgramacion(),
         getEstrategiaDidactica(silabo.asig_estrategia_didactica),
         getEvaluacionAprendizaje(),
-        getReferencias(),
+        getReferencias(referencias),
       ],
       margin: [30, 15, 0, 0],
     },
@@ -78,7 +79,7 @@ function crearPdf({
 }
 
 function generatePdf(
-  { silabo, docentes, capacidades, cgenerales, cespecificos },
+  { silabo, docentes, capacidades, cgenerales, cespecificos, referencias },
   callback
 ) {
   const nombres = docentes.map(
@@ -110,6 +111,7 @@ function generatePdf(
         capacidades: listaCapacidades,
         compe_general,
         compe_espec,
+        referencias,
       }),
       styles: styles,
       pageMargins: [40, 60, 10, 100],
